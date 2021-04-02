@@ -4,6 +4,7 @@ import './App.css';
 import {BrowserRouter as Router, Link, Route, Switch} from "react-router-dom";
 
 // import Login from "./components/login.component";
+import Signup from "./components/signup.component";
 import Login from "./components/Login";
 import Issues from "./components/Issues";
 import NewIssue from "./components/NewIssue";
@@ -13,7 +14,9 @@ import {Col, Container, Row} from "react-bootstrap";
 
 
 const App = () => {
+  
   const {user, loginState} = useLoginState();
+  console.log({user, loginState})
 
   return <Router>
     <div className="App">
@@ -29,8 +32,7 @@ const App = () => {
                   <Route exact path='/issues' component={Issues}/>
                   <Route exact path='/new' component={NewIssue}/>
                   <Route path="/sign-in" component={Login}/>
-                  <Route path="/login" component={Login}/>
-                  {/*<Route path="/sign-up" component={SignUp}/>*/}
+                  <Route path="/sign-up" component={Signup}/>
                 </Switch>
               </Col>
             </Row>

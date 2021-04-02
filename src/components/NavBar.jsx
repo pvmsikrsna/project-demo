@@ -1,7 +1,7 @@
 import React from 'react'
 import {Form, FormControl, Nav, Navbar} from "react-bootstrap";
 
-const NavBar = ({search, onSearchChange}) => {
+const NavBar = ({search, onSearchChange, appState}) => {
   return <>
     <Navbar bg="light" expand="md">
       <Navbar.Brand href="#home">Issues Server</Navbar.Brand>

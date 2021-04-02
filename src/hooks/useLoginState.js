@@ -17,14 +17,13 @@ export const useLoginState = () => {
     let user = localStorage.getItem('user') || 'admin@issues.com'
 
     APIs.findUserByEmail(user).then(x => {
-      debugger
       setValue(Object.assign({}, value, {loginState: APP_STATE.LOGIN_SUCCESS, user}))
       setLoginState(APP_STATE.LOGIN_SUCCESS)
       setUser(x);
     }).catch(() => {
       setValue(Object.assign({}, value, {loginState: APP_STATE.LOGOUT, user: null}))
     })
-  })
+  }, [])
 
   return value
 }
