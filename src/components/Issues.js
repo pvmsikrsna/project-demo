@@ -1,19 +1,11 @@
 import React from "react";
-import {Container, Row, Col} from "react-bootstrap";
+import {Col, Container, Row} from "react-bootstrap";
 import Issue from "./Issue";
 
-export default () => {
+export default ({list = []}) => {
   return <Container fluid>
     <Row>
-      <Col>
-        <Issue/>
-      </Col>
-      <Col>
-        <Issue/>
-      </Col>
-      <Col>
-        <Issue/>
-      </Col>
+      {list.map(x => <Col><Issue issue={x}/></Col>)}
     </Row>
   </Container>
 }

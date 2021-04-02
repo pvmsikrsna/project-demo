@@ -106,3 +106,20 @@ h1 {
     position: absolute;
     font-size: .8em;
 }
+
+.issue-detail {
+    padding-left: 0;
+}
+
+.issue-description {
+    margin-bottom: 0;
+}
+
+.issue-detail,
+.issue-description {
+    text-align: left;
+}
+
+.view-issue {
+    margin-right: 15px;
+}

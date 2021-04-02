@@ -1,0 +1,11 @@
+GET http://localhost:3001/top-issues
+
+###
+PUT http://localhost:3001/top-issues
+Content-Type: application/json
+
+{
+  "1" : 19,
+  "2" : 20
+}
+

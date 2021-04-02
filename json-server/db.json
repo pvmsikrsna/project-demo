@@ -9,5 +9,35 @@
       "contactNo": "12311231",
       "id": 1
     }
-  ]
+  ],
+  "issues": [
+    {
+      "id": 1,
+      "description": "Unable to add items to cart",
+      "severity": "Critical",
+      "status": "In Progress",
+      "created": "9-12-2021 19:00:00",
+      "resolved": "9-12-2021 19:00:00"
+    },
+    {
+      "id": 2,
+      "description": "Customer Support number not reachable",
+      "severity": "Minor",
+      "status": "Closed",
+      "created": "9-12-2021 19:00:00",
+      "resolved": "9-12-2021 19:00:00"
+    },
+    {
+      "id": 3,
+      "description": "Users not able to shop more than 5 items",
+      "severity": "Major",
+      "status": "Open",
+      "created": "9-12-2021 19:00:00",
+      "resolved": "9-12-2021 19:00:00"
+    }
+  ],
+  "top-issues": {
+    "1": 19,
+    "2": 20
+  }
 }
