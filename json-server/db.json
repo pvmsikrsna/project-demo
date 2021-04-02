@@ -1,0 +1,13 @@
+{
+  "users": [
+    {
+      "firstName": "Ravi",
+      "lastName": "Krishna",
+      "email": "ravi@email.com",
+      "password": "12341234",
+      "location": "Hyderabad",
+      "contactNo": "12311231",
+      "id": 1
+    }
+  ]
+}
