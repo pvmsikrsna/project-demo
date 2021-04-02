@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-export default class SignUp extends Component {
+export default class NewIssue extends Component {
     render() {
         return (
             <form>
