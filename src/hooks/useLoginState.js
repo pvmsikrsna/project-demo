@@ -11,19 +11,28 @@ export const useLoginState = () => {
   const [loginState, setLoginState] = React.useState(APP_STATE.CHECKING_LOGIN)
   const [user, setUser] = React.useState(null);
 
-  const [value, setValue] = React.useState({user, loginState})
 
-  React.useEffect(() => {
-    let user = localStorage.getItem('user') || 'admin@issues.com'
-
-    APIs.findUserByEmail(user).then(x => {
-      setValue(Object.assign({}, value, {loginState: APP_STATE.LOGIN_SUCCESS, user}))
-      setLoginState(APP_STATE.LOGIN_SUCCESS)
-      setUser(x);
-    }).catch(() => {
-      setValue(Object.assign({}, value, {loginState: APP_STATE.LOGOUT, user: null}))
+  let recheck = () => {
+    let user = localStorage.getItem('user')
+    APIs.findUserByEmail(user).then(({data: users}) => {
+      if (users.length > 0) {
+        setValue(Object.assign({}, value, {loginState: APP_STATE.LOGIN_SUCCESS, user}))
+        setLoginState(APP_STATE.LOGIN_SUCCESS)
+      } else {
+        setValue(Object.assign({}, value, {loginState: APP_STATE.LOGOUT, user: null}))
+      }
     })
-  }, [])
+  };
+
+  const setLoginUser = React.useCallback((user) => {
+    localStorage.setItem('user', user.email)
+    setLoginState(APP_STATE.LOGIN_SUCCESS);
+    setValue(Object.assign({}, value, {loginState: APP_STATE.LOGIN_SUCCESS, user: user.email}))
+  })
+
+  const [value, setValue] = React.useState({user, loginState, setLoginUser})
+
+  React.useEffect(recheck, [])
 
   return value
 }

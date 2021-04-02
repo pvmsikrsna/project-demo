@@ -43,9 +43,6 @@ const INITIAL_VALUES = {
   location: "Hyderabad",
 };
 export default function Signup() {
-  const register = () => {
-
-  }
 
   function renderInputControl(propName, placeholder, label, handleChange, handleBlur, values, touched, errors) {
     return <Form.Group controlId={propName}>

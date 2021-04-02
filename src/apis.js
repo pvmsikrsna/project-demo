@@ -30,6 +30,6 @@ export const APIs = {
     return await axios.get(API_HOST + '/issues', {params})
   },
   findUserByEmail: async (email) => {
-    return await axios.post(API_HOST + '/users?email', email)
+    return await axios.get(API_HOST + '/users', {params: {email: email ||''}})
   },
 }
