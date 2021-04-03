@@ -1,14 +1,7 @@
 import React from 'react';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  useHistory,
-  useRouteMatch,
-  withRouter
-} from "react-router-dom";
+import {Route, Switch, useHistory, useRouteMatch, withRouter} from "react-router-dom";
 
 import Login from "./components/login.component";
 import Signup from "./components/signup.component";
@@ -18,10 +11,7 @@ import NavBar2 from './components/NavBar'
 import NewIssue from "./components/NewIssue";
 import {APIs} from "./apis";
 import ViewIssue from "./components/ViewIssue";
-import { createBrowserHistory } from "history";
-import { HashRouter, StaticRouter } from 'react-router-dom'
 
-const browserHistory = createBrowserHistory();
 
 const Redirect = withRouter(({to, history}) => {
     React.useEffect(() => {
@@ -48,11 +38,9 @@ const App = (props, context) => {
     history.push(`/issue/${issue.id}/edit`)
   }, [])
 
-
   // List Issue Handler
   const renderIssuesRoute = () => () => {
-    return <Issues list={issueList}
-                   onViewIssue={loadIssue} onEditIssue={editIssue}/>
+    return <Issues list={issueList} onViewIssue={loadIssue} onEditIssue={editIssue}/>
   };
 
   let issueIdMatch = useRouteMatch({
@@ -106,7 +94,6 @@ const App = (props, context) => {
   const handleFilterChange = React.useCallback((event) => {
     setIssueFilter(event.target.value);
   }, [])
-
 
   // When search filter changes, filter the issues
   React.useEffect(() => {

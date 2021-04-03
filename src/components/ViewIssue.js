@@ -21,7 +21,6 @@ export default ({issue}) => {
       </Col>
     </Form.Group>
 
-
     <Form.Group as={Row} controlId="issueStatus">
       <Form.Label column sm={2}>
         Status
@@ -31,7 +30,6 @@ export default ({issue}) => {
       </Col>
     </Form.Group>
 
-
     <Form.Group as={Row} controlId="severity">
       <Form.Label column sm={2}>
         Severity
@@ -40,7 +38,6 @@ export default ({issue}) => {
         <Form.Control type="text" disabled value={issue.severity}/>
       </Col>
     </Form.Group>
-
 
     <Form.Group as={Row} controlId="created">
       <Form.Label column sm={2}>
