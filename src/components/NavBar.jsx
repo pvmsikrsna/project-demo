@@ -1,11 +1,11 @@
 import React from 'react'
 import {Form, FormControl, Nav, Navbar} from "react-bootstrap";
-import {APP_STATE} from "../hooks/useLoginState";
+import {LOGIN_STATE} from "../hooks/useLoginState";
 
 const NavBar = ({search, onSearchChange, loginState, onLogout, onAddNewIssue}) => {
 
   const renderAuthenticatedControls = () => {
-    return loginState === APP_STATE.LOGIN_SUCCESS ?
+    return loginState === LOGIN_STATE.LOGIN_SUCCESS ?
     <>
       <Form>
         <FormControl type="text" value={search} onChange={onSearchChange}

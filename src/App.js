@@ -6,7 +6,7 @@ import {Route, Switch, useHistory, useRouteMatch, withRouter} from "react-router
 import Login from "./components/login.component";
 import Signup from "./components/signup.component";
 import Issues from "./components/Issues";
-import {APP_STATE, useLoginState} from "./hooks/useLoginState";
+import {LOGIN_STATE, useLoginState} from "./hooks/useLoginState";
 import NavBar2 from './components/NavBar'
 import NewIssue from "./components/NewIssue";
 import {APIs} from "./apis";
@@ -26,7 +26,8 @@ const Redirect = withRouter(({to, history, exclude}) => {
 )
 const App = (props, context) => {
 
-  const {user, loginState, clearLogin} = useLoginState();
+  const {user, loginState, clearLogin, setLoginUser} = useLoginState();
+  
   const {updateTopIssues, fetchTopIssues, topIssues} = useTopIssues();
 
   const [issueList, setIssueList] = React.useState([])
@@ -34,7 +35,7 @@ const App = (props, context) => {
   const history = useHistory();
 
   const loadIssue = React.useCallback((issue) => {
-    if (loginState === APP_STATE.LOGOUT) {
+    if (loginState === LOGIN_STATE.LOGOUT) {
       history.push(`/sign-in`)
     } else {
       updateTopIssues(issue.id)
@@ -43,7 +44,7 @@ const App = (props, context) => {
   }, [])
 
   const editIssue = React.useCallback((issue) => {
-    if (loginState === APP_STATE.LOGOUT) {
+    if (loginState === LOGIN_STATE.LOGOUT) {
       history.push(`/sign-in`)
     } else {
       history.push(`/issue/${issue.id}/edit`)
@@ -140,7 +141,7 @@ const App = (props, context) => {
   // Render the routes
   const renderRoutes = () => {
     console.log({loginState})
-    if (loginState === APP_STATE.LOGIN_SUCCESS) {
+    if (loginState === LOGIN_STATE.LOGIN_SUCCESS) {
       return <>
         <Route exact path='/issue/new' component={renderNewIssueRoute}/>
         <Route exact path='/issues' render={renderIssuesRoute}/>
@@ -149,11 +150,12 @@ const App = (props, context) => {
         <Route exact path='/issue/:id/edit' render={renderEditIssueRoute}/>
         <Route exact path='/:any' render={() => <Redirect to={'/issues'}/>}/>
       </>;
-    } else if (loginState === APP_STATE.LOGOUT) {
+    } else if (loginState === LOGIN_STATE.LOGOUT) {
       return <>
         <Route exact path='/issues' render={renderIssuesRoute}/>
         <Route exact path='/sign-in' render={() => {
           return <Login onLogin={user => {
+            setLoginUser(user)
             history.replace('/issues');
           }}/>
         }}/>
