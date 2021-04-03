@@ -31,7 +31,7 @@ const INITIAL_VALUES = {
   location: "Hyderabad",
 };
 
-function Login(props) {
+function Login(props, context) {
 
   const renderInputControl = (propName, placeholder, label, handleChange, handleBlur, values, touched, errors) =>
     <Form.Group controlId={propName}>
@@ -70,14 +70,11 @@ function Login(props) {
         return;
       } else {
         localStorage.setItem('user', user.email);
-        props.history.push('/issues');
         if(props.onLogin){
           props.onLogin(user);
         }
       }
-
     });
-
   };
 
   let renderError = () => {

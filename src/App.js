@@ -40,7 +40,7 @@ const App = (props, context) => {
   }, [])
 
   // List Issue Handler
-  const renderIssuesRoute = () => () => {
+  const renderIssuesRoute = () => {
     return <Issues list={issueList} onViewIssue={loadIssue} onEditIssue={editIssue}/>
   };
 
@@ -66,17 +66,19 @@ const App = (props, context) => {
     if (loginState === APP_STATE.LOGIN_SUCCESS) {
       return <>
         <Route exact path='/issue/new' component={NewIssue}/>
-        <Route path='/issues' render={renderIssuesRoute()}/>
+        <Route path='/issues' render={renderIssuesRoute}/>
         <Route path='/issue/:id' render={renderIssueDetails}/>
         <Route path='/:any' component={Issues}/>
       </>;
     } else if (loginState === APP_STATE.LOGOUT) {
       return <>
-        <Route path='/sign-in' component={Login}/>
-        <Route path='/sign-up' component={Signup}/>
-        <Route path='/issues' render={() => {
-          return <Issues/>
+        <Route path='/sign-in' render={() => {
+          return <Login onLogin={user => {
+            history.replace('/issues');
+          }}/>
         }}/>
+        <Route path='/sign-up' component={Signup}/>
+        <Route path='/issues' render={renderIssuesRoute}/>
         <Route path='/:any' render={() => {
           return <Redirect to={'/sign-in'}/>
         }}/>
