@@ -18,6 +18,10 @@ import NavBar2 from './components/NavBar'
 import NewIssue from "./components/NewIssue";
 import {APIs} from "./apis";
 import ViewIssue from "./components/ViewIssue";
+import { createBrowserHistory } from "history";
+import { HashRouter, StaticRouter } from 'react-router-dom'
+
+const browserHistory = createBrowserHistory();
 
 const Redirect = withRouter(({to, history}) => {
     React.useEffect(() => {
@@ -26,9 +30,9 @@ const Redirect = withRouter(({to, history}) => {
     return <></>
   }
 )
-const App = () => {
+const App = (props, context) => {
 
-  const {user, loginState, setLoginUser} = useLoginState();
+  const {user, loginState, clearLogin} = useLoginState();
 
   console.log({user, loginState})
 
@@ -45,17 +49,18 @@ const App = () => {
   }, [])
 
 
+  // List Issue Handler
   const renderIssuesRoute = () => () => {
     return <Issues list={issueList}
                    onViewIssue={loadIssue} onEditIssue={editIssue}/>
   };
 
   let issueIdMatch = useRouteMatch({
-    path: "/issue/details/:id", strict: true,
+    path: "/issue/:id", strict: true,
     sensitive: true
   });
 
-
+  // View Issue route handler
   const renderIssueDetails = () => {
     let {path, url, params} = issueIdMatch;
     let matched = issueList.filter(x => x.id == params.id)
@@ -68,13 +73,14 @@ const App = () => {
     return <h1> Failed for {JSON.stringify(params)}</h1>
   };
 
+  // Render the routes
   const renderRoutes = () => {
     console.log({loginState})
     if (loginState === APP_STATE.LOGIN_SUCCESS) {
       return <>
-        <Route path='/issue/new' component={NewIssue}/>
+        <Route exact path='/issue/new' component={NewIssue}/>
         <Route path='/issues' render={renderIssuesRoute()}/>
-        <Route exact path='/issue/details/:id' render={renderIssueDetails}/>
+        <Route path='/issue/:id' render={renderIssueDetails}/>
         <Route path='/:any' component={Issues}/>
       </>;
     } else if (loginState === APP_STATE.LOGOUT) {
@@ -102,6 +108,7 @@ const App = () => {
   }, [])
 
 
+  // When search filter changes, filter the issues
   React.useEffect(() => {
     APIs.getIssues({description_like: issueFilter.trim()}).then(({data: list}) => {
       setIssueList(list)
@@ -112,19 +119,18 @@ const App = () => {
 
   }, [issueIdMatch])
 
-  return <Router forceRefresh={true}>
-    <div className="App">
-      <NavBar2 search={issueFilter} onSearchChange={handleFilterChange} loginState={loginState}/>
+  return <div className="App">
+    <NavBar2 search={issueFilter} onLogout={clearLogin}
+             onSearchChange={handleFilterChange} loginState={loginState}/>
 
-      <div className="outer">
-        <div className="inner">
-          <Switch>
-            {renderRoutes()}
-          </Switch>
-        </div>
+    <div className="outer">
+      <div className="inner">
+        <Switch>
+          {renderRoutes()}
+        </Switch>
       </div>
     </div>
-  </Router>;
+  </div>
 };
 
 export default App;

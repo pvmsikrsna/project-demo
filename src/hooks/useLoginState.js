@@ -30,7 +30,15 @@ export const useLoginState = () => {
     setValue(Object.assign({}, value, {loginState: APP_STATE.LOGIN_SUCCESS, user: user.email}))
   })
 
-  const [value, setValue] = React.useState({user, loginState, setLoginUser})
+
+  const clearLogin = React.useCallback((user) => {
+    localStorage.removeItem('user')
+    setLoginState(APP_STATE.LOGOUT);
+    setUser(null);
+    setValue(Object.assign({}, value, {loginState: APP_STATE.LOGOUT, user: null}))
+  })
+
+  const [value, setValue] = React.useState({user, loginState, setLoginUser, clearLogin})
 
   React.useEffect(recheck, [])
 
