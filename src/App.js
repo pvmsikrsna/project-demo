@@ -11,6 +11,7 @@ import NavBar2 from './components/NavBar'
 import NewIssue from "./components/NewIssue";
 import {APIs} from "./apis";
 import ViewIssue from "./components/ViewIssue";
+import {useTopIssues} from "./hooks/useTopIssues";
 
 
 const Redirect = withRouter(({to, history}) => {
@@ -23,14 +24,14 @@ const Redirect = withRouter(({to, history}) => {
 const App = (props, context) => {
 
   const {user, loginState, clearLogin} = useLoginState();
-
-  console.log({user, loginState})
+  const {updateTopIssues, fetchTopIssues, topIssues} = useTopIssues();
 
   const [issueList, setIssueList] = React.useState([])
 
   const history = useHistory();
 
   const loadIssue = React.useCallback((issue) => {
+    updateTopIssues(issue.id)
     history.push(`/issue/${issue.id}`, true)
   }, [])
 
@@ -52,11 +53,9 @@ const App = (props, context) => {
   const renderIssueDetails = () => {
     let {path, url, params} = issueIdMatch;
     let matched = issueList.filter(x => x.id == params.id)
-    debugger
     if (matched.length === 1) {
       return <ViewIssue issue={matched[0]}/>
     } else {
-      debugger
     }
     return <h1> Failed for {JSON.stringify(params)}</h1>
   };

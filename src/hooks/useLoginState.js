@@ -11,7 +11,6 @@ export const useLoginState = () => {
   const [loginState, setLoginState] = React.useState(APP_STATE.CHECKING_LOGIN)
   const [user, setUser] = React.useState(null);
 
-
   let recheck = () => {
     let user = localStorage.getItem('user')
     APIs.findUserByEmail(user).then(({data: users}) => {
@@ -29,7 +28,6 @@ export const useLoginState = () => {
     setLoginState(APP_STATE.LOGIN_SUCCESS);
     setValue(Object.assign({}, value, {loginState: APP_STATE.LOGIN_SUCCESS, user: user.email}))
   })
-
 
   const clearLogin = React.useCallback((user) => {
     localStorage.removeItem('user')

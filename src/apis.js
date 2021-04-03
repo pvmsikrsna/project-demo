@@ -29,6 +29,12 @@ export const APIs = {
   getIssues: async (params) => {
     return await axios.get(API_HOST + '/issues', {params})
   },
+  updateTopIssue: async (payload) => {
+    return await axios.put(API_HOST + '/top-issues', payload)
+  },
+  getViewIssueCount: async () => {
+    return await axios.get(API_HOST + '/top-issues')
+  },
   findUserByEmail: async (email) => {
     return await axios.get(API_HOST + '/users', {params: {email: email ||''}})
   },
