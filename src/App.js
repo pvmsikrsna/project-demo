@@ -15,9 +15,11 @@ import {useTopIssues} from "./hooks/useTopIssues";
 import TopIssues from "./components/TopIssues";
 
 
-const Redirect = withRouter(({to, history}) => {
+const Redirect = withRouter(({to, history, exclude}) => {
     React.useEffect(() => {
-      history.replace(to)
+      if(exclude !== history.location.pathname){
+        history.replace(to)
+      }
     }, [])
     return <></>
   }
@@ -32,12 +34,20 @@ const App = (props, context) => {
   const history = useHistory();
 
   const loadIssue = React.useCallback((issue) => {
-    updateTopIssues(issue.id)
-    history.push(`/issue/${issue.id}`, true)
+    if (loginState === APP_STATE.LOGOUT) {
+      history.push(`/sign-in`)
+    } else {
+      updateTopIssues(issue.id)
+      history.push(`/issue/${issue.id}`)
+    }
   }, [])
 
   const editIssue = React.useCallback((issue) => {
-    history.push(`/issue/${issue.id}/edit`)
+    if (loginState === APP_STATE.LOGOUT) {
+      history.push(`/sign-in`)
+    } else {
+      history.push(`/issue/${issue.id}/edit`)
+    }
   }, [])
 
   // List Issue Handler
@@ -72,7 +82,7 @@ const App = (props, context) => {
         resetForm();
         setSubmitting(false);
         setIssueList(list)
-        history.push(`/issue/${issue.id}`)
+        history.push(`/issues`)
       })
     });
   };
@@ -123,6 +133,10 @@ const App = (props, context) => {
     return <></>
   };
 
+  const goToCreateNewIssue = () => {
+    setIssueFilter('');
+    history.push('/issue/new')
+  }
   // Render the routes
   const renderRoutes = () => {
     console.log({loginState})
@@ -137,15 +151,15 @@ const App = (props, context) => {
       </>;
     } else if (loginState === APP_STATE.LOGOUT) {
       return <>
-        <Route path='/sign-in' render={() => {
+        <Route exact path='/issues' render={renderIssuesRoute}/>
+        <Route exact path='/sign-in' render={() => {
           return <Login onLogin={user => {
             history.replace('/issues');
           }}/>
         }}/>
-        <Route path='/sign-up' component={Signup}/>
-        <Route path='/issues' render={renderIssuesRoute}/>
-        <Route path='/:any' render={() => {
-          return <Redirect to={'/sign-in'}/>
+        <Route exact path='/sign-up' component={Signup}/>
+        <Route path='/' render={() => {
+          return <Redirect to='/sign-in' exclude='/issues'/>
         }}/>
       </>
     } else {
@@ -168,7 +182,7 @@ const App = (props, context) => {
   }, [issueIdMatch])
 
   return <div className="App">
-    <NavBar2 search={issueFilter} onLogout={clearLogin}
+    <NavBar2 search={issueFilter} onLogout={clearLogin} onAddNewIssue={goToCreateNewIssue}
              onSearchChange={handleFilterChange} loginState={loginState}/>
 
     <div className="outer">

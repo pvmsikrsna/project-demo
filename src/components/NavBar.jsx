@@ -2,7 +2,7 @@ import React from 'react'
 import {Form, FormControl, Nav, Navbar} from "react-bootstrap";
 import {APP_STATE} from "../hooks/useLoginState";
 
-const NavBar = ({search, onSearchChange, loginState, onLogout}) => {
+const NavBar = ({search, onSearchChange, loginState, onLogout, onAddNewIssue}) => {
 
   const renderAuthenticatedControls = () => {
     return loginState === APP_STATE.LOGIN_SUCCESS ?
@@ -12,8 +12,9 @@ const NavBar = ({search, onSearchChange, loginState, onLogout}) => {
                      placeholder="Search" className="mr-sm-2"/>
       </Form>
 
+      <Nav.Link onClick={onAddNewIssue}>Add Issue</Nav.Link>
       <Nav.Link onClick={onLogout}>Logout</Nav.Link>
-    </> : <></>;
+    </> : <Nav.Link href='/sign-in'>Sign In</Nav.Link>;
   };
 
   return <>

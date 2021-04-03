@@ -15,7 +15,7 @@ const validationSchema = Yup.object().shape({
   severity: Yup.string().oneOf(Object.values(ISSUE_SEVERITY)).required(),
   status: Yup.string().oneOf(Object.values(ISSUE_STATUS)).required(),
   created: Yup.date().required('*Created Date is required'),
-  updated: Yup.date(),
+  resolved: Yup.date(),
 });
 
 const INITIAL_VALUES = {
@@ -24,7 +24,7 @@ const INITIAL_VALUES = {
   status: ISSUE_STATUS.OPEN,
   // created: '2020-01-01',
   created: null,
-  updated: null,
+  resolved: null,
 };
 
 export default ({issue = null, onSubmit = noop}) => {
@@ -46,8 +46,11 @@ export default ({issue = null, onSubmit = noop}) => {
       ) : null}
     </Form.Group>;
 
-  const renderCreatedDate = (propName, values, setFieldValue, touched, errors, onBlur) =>
-    <Form.Group controlId={propName}>
+  const renderCreatedDate = (propName, values, setFieldValue, touched, errors, onBlur) => {
+    if(errors){
+      console.log({errors})
+    }
+    return <Form.Group controlId={propName}>
       <Form.Label>Created</Form.Label>
       <Form.Control
         type={'date'}
@@ -62,9 +65,10 @@ export default ({issue = null, onSubmit = noop}) => {
         className={touched[propName] && errors[propName] ? "error" : null}
       />
       {touched[propName] && errors[propName] ? (
-        <div className="error-message">{errors[propName]}</div>
+        <div className="error-message">*Invalid created date</div>
       ) : null}
     </Form.Group>;
+  };
 
 
   const renderResolvedDate = (propName, values, setFieldValue, touched, errors, onBlur) =>
@@ -82,7 +86,7 @@ export default ({issue = null, onSubmit = noop}) => {
         className={touched[propName] && errors[propName] ? "error" : null}
       />
       {touched[propName] && errors[propName] ? (
-        <div className="error-message">{errors[propName]}</div>
+        <div className="error-message">*Invalid resolved date</div>
       ) : null}
     </Form.Group>;
 
@@ -148,7 +152,7 @@ export default ({issue = null, onSubmit = noop}) => {
       {renderResolvedDate('resolved', values, setFieldValue, touched, errors, handleBlur)}
       {renderInputControl('description', 'Description', 'Issue Description', handleChange, handleBlur, values, touched, errors)}
       <button type="submit" disabled={isSubmitting}
-              className="btn btn-dark btn-lg btn-block">
+              className="btn btn-dark btn-lg btn-block register-issue">
         {issue ? 'Update Issue' : 'Register Issue'}
       </button>
     </Form>;

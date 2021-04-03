@@ -129,3 +129,8 @@ h1 {
 .view-issue {
     margin-right: 15px;
 }
+
+button.register-issue {
+    margin-top:34px;
+    display: block;
+}
