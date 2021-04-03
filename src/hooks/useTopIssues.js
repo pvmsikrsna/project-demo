@@ -13,17 +13,16 @@ export const useTopIssues = () => {
 
   const [topIssues, setTopIssues] = React.useState({});
 
-  const fetchTopIssues = React.useCallback(() => {
+  const fetchTopIssues = () => {
     APIs.getViewIssueCount().then(({data}) => {
-      debugger
       setTopIssues(data)
-      Object.assign({}, value, {topIssues: data})
+      setValue(Object.assign({}, value, {topIssues: data}))
     })
-  }, [])
+  }
 
   React.useEffect(fetchTopIssues, [])
 
-  const [value] = React.useState({updateTopIssues, fetchTopIssues, topIssues})
+  const [value, setValue] = React.useState({updateTopIssues, topIssues})
 
-  return value
+  return {topIssues, updateTopIssues}
 }

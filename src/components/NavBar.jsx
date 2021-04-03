@@ -13,6 +13,7 @@ const NavBar = ({search, onSearchChange, loginState, onLogout, onAddNewIssue}) =
       </Form>
 
       <Nav.Link onClick={onAddNewIssue}>Add Issue</Nav.Link>
+      <Nav.Link href={'/issues/top'}>Top Issues</Nav.Link>
       <Nav.Link onClick={onLogout}>Logout</Nav.Link>
     </> : <Nav.Link href='/sign-in'>Sign In</Nav.Link>;
   };

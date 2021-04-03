@@ -58,7 +58,7 @@ const App = (props, context) => {
   
   // List Issue Handler
   const renderTopIssuesRoute = () => {
-    return <TopIssues/>
+    return <TopIssues issues={issueList}/>
   };
 
   // When search filter changes, filter the issues
