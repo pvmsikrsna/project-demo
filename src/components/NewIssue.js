@@ -1,19 +1,9 @@
 import React from "react";
-import {Button, Col, Row, Form} from "react-bootstrap";
-import {withFormik} from "formik";
-import {Formik} from 'formik';
+import {Form, ToggleButton, ToggleButtonGroup} from "react-bootstrap";
+import {Formik} from "formik";
 import * as Yup from 'yup';
 import {APIs} from "../apis";
-
-let schema = Yup.object().shape({
-  description: Yup.string().required().ensure().min(3),
-  severity: Yup.string().required().oneOf(['Major', 'Minor', 'Critical']),
-  status: Yup.string().required().oneOf(['Open', 'Closed', 'In Progress']),
-});
-
-// RegEx for phone number validation
-const phoneRegExp = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
-
+import {ISSUE_SEVERITY, ISSUE_STATUS} from "./utils";
 
 // Schema for yup
 const validationSchema = Yup.object().shape({
@@ -21,14 +11,19 @@ const validationSchema = Yup.object().shape({
     .min(2, "*Description must have at least 10 characters")
     .max(200, "*Description can't be longer than 200 characters")
     .required("*Description is required"),
-  severity: Yup.string().oneOf(['Major', 'Minor', 'Critical']).required(),
-  status: Yup.string().oneOf(['Open', 'Closed', 'In Progress']).required(),
+  severity: Yup.string().oneOf(Object.values(ISSUE_SEVERITY)).required(),
+  status: Yup.string().oneOf(Object.values(ISSUE_STATUS)).required(),
+  created: Yup.date().required('*Created Date is required'),
+  updated: Yup.date(),
 });
 
 const INITIAL_VALUES = {
   description: "",
-  severity: "Minor",
-  status: "Open",
+  severity: ISSUE_SEVERITY.MAJOR,
+  status: ISSUE_STATUS.OPEN,
+  // created: '2020-01-01',
+  created: null,
+  updated: null,
 };
 
 export default function NewIssue() {
@@ -50,37 +45,127 @@ export default function NewIssue() {
       ) : null}
     </Form.Group>;
 
+  const renderCreatedDate = (propName, values, setFieldValue, touched, errors, onBlur) =>
+    <Form.Group controlId={propName}>
+      <Form.Label>Created</Form.Label>
+      <Form.Control
+        type={'date'}
+        name={propName}
+        placeholder={'Created'}
+        onChange={(event) => {
+          debugger
+          setFieldValue(propName, event.target.value)
+        }}
+        onBlur={onBlur}
+        value={values[propName]}
+        className={touched[propName] && errors[propName] ? "error" : null}
+      />
+      {touched[propName] && errors[propName] ? (
+        <div className="error-message">{errors[propName]}</div>
+      ) : null}
+    </Form.Group>;
+
+
+  const renderResolvedDate = (propName, values, setFieldValue, touched, errors, onBlur) =>
+    <Form.Group controlId={propName}>
+      <Form.Label>Resolved</Form.Label>
+      <Form.Control
+        type={'date'}
+        name={propName}
+        placeholder={'Resolved'}
+        onChange={(event) => {
+          debugger
+          setFieldValue(propName, event.target.value)
+        }}
+        onBlur={onBlur}
+        value={values[propName]}
+        className={touched[propName] && errors[propName] ? "error" : null}
+      />
+      {touched[propName] && errors[propName] ? (
+        <div className="error-message">{errors[propName]}</div>
+      ) : null}
+    </Form.Group>;
+
+
+  const renderIssueSeverity = (values, setFieldValue, touched, errors) => {
+    let propName = 'severity'
+    return <Form.Group controlId={propName}>
+      <Form.Label>Issue Severity</Form.Label>
+      <div>
+        <ToggleButtonGroup type="checkbox" onChange={e => {
+          debugger
+          setFieldValue(propName, e[1])
+        }} value={values[propName]} className="mb-2">
+          <ToggleButton value={ISSUE_SEVERITY.MAJOR}>Major</ToggleButton>
+          <ToggleButton value={ISSUE_SEVERITY.MINOR}>Minor</ToggleButton>
+          <ToggleButton value={ISSUE_SEVERITY.CRITICAL}>Critical</ToggleButton>
+        </ToggleButtonGroup>
+      </div>
+      {touched[propName] && errors[propName] ? (
+        <div className="error-message">{errors[propName]}</div>
+      ) : null}
+    </Form.Group>;
+  };
+
+  const renderIssueStatus = (values, setFieldValue, touched, errors) => {
+    let propName = 'status'
+    return <Form.Group controlId={propName}>
+      <Form.Label>Issue Status</Form.Label>
+      <div>
+        <ToggleButtonGroup type="checkbox" onChange={e => {
+          debugger
+          setFieldValue(propName, e[1])
+        }} value={values[propName]} className="mb-2">
+          <ToggleButton value={ISSUE_STATUS.OPEN}>Open</ToggleButton>
+          <ToggleButton value={ISSUE_STATUS.IN_PROGRESS}>In Progress</ToggleButton>
+          <ToggleButton value={ISSUE_STATUS.CLOSED}>Closed</ToggleButton>
+        </ToggleButtonGroup>
+      </div>
+      {touched[propName] && errors[propName] ? (
+        <div className="error-message">{errors[propName]}</div>
+      ) : null}
+    </Form.Group>;
+  };
+
   let registerNewIssue = (values, {setSubmitting, resetForm}) => {
     setSubmitting(true);
     let {firstName, lastName, email, phone, password, location} = values
-    APIs.createUser(firstName, lastName, email, password, location, phone).then(x => {
+    APIs.createIssue(firstName, lastName, email, password, location, phone).then(x => {
       // alert(JSON.stringify(values, null, 2));
       resetForm();
       setSubmitting(false);
     });
   };
 
+  let renderNewIssueForm = (obj) => {
+    let {
+      values,
+      errors,
+      touched,
+      handleChange,
+      handleBlur,
+      handleSubmit,
+      isSubmitting,
+      setFieldValue
+    } = obj
+    return <Form onSubmit={handleSubmit}>
+      <h3>New Issue</h3>
+      {renderIssueSeverity(values, setFieldValue, touched, errors)}
+      {renderIssueStatus(values, setFieldValue, touched, errors)}
+      {renderCreatedDate('created', values, setFieldValue, touched, errors, handleBlur)}
+      {renderResolvedDate('resolved', values, setFieldValue, touched, errors, handleBlur)}
+      {renderInputControl('description', 'Description', 'Issue Description', handleChange, handleBlur, values, touched, errors)}
+      <button type="submit" disabled={isSubmitting}
+              className="btn btn-dark btn-lg btn-block">
+        Create
+      </button>
+    </Form>;
+  };
+
   return (
     <Formik initialValues={INITIAL_VALUES} validationSchema={validationSchema}
             onSubmit={registerNewIssue}>
-      {({
-          values,
-          errors,
-          touched,
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          isSubmitting
-        }) => (<Form onSubmit={handleSubmit}>
-        <h3>New Issue</h3>
-        {renderInputControl('description', 'Description', 'Issue Description', handleChange, handleBlur, values, touched, errors)}
-
-        <button type="submit" disabled={isSubmitting}
-                className="btn btn-dark btn-lg btn-block">
-          Create
-        </button>
-       </Form>)
-      }
+      {renderNewIssueForm}
     </Formik>
   );
 }

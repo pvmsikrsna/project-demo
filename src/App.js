@@ -66,9 +66,9 @@ const App = (props, context) => {
     if (loginState === APP_STATE.LOGIN_SUCCESS) {
       return <>
         <Route exact path='/issue/new' component={NewIssue}/>
-        <Route path='/issues' render={renderIssuesRoute}/>
+        <Route exact path='/issues' render={renderIssuesRoute}/>
         <Route path='/issue/:id' render={renderIssueDetails}/>
-        <Route path='/:any' component={Issues}/>
+        <Route exact path='/:any' render={() => <Redirect to={'/issues'}/>}/>
       </>;
     } else if (loginState === APP_STATE.LOGOUT) {
       return <>
