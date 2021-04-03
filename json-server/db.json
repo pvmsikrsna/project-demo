@@ -12,33 +12,33 @@
   ],
   "issues": [
     {
-      "id": 1,
-      "description": "Unable to add items to cart",
+      "description": "Unable to add items to cart after login. Reproducable",
       "severity": "Critical",
       "status": "In Progress",
-      "created": "9-12-2021 19:00:00",
-      "resolved": "9-12-2021 19:00:00"
+      "created": "2020-01-16",
+      "resolved": null,
+      "id": 1
     },
     {
       "id": 2,
       "description": "Customer Support number not reachable",
       "severity": "Minor",
       "status": "Closed",
-      "created": "9-12-2021 19:00:00",
-      "resolved": "9-12-2021 19:00:00"
+      "created": "2020-01-01",
+      "resolved": null
     },
     {
       "id": 3,
       "description": "Users not able to shop more than 5 items",
       "severity": "Major",
       "status": "Open",
-      "created": "9-12-2021 19:00:00",
-      "resolved": "9-12-2021 19:00:00"
+      "created": "2020-01-01",
+      "resolved": null
     }
   ],
   "top-issues": {
     "1": 1,
-    "2": 3,
+    "2": 4,
     "3": 2
   }
 }

@@ -4,6 +4,7 @@ import {Formik} from "formik";
 import * as Yup from 'yup';
 import {APIs} from "../apis";
 import {ISSUE_SEVERITY, ISSUE_STATUS} from "./utils";
+import {noop} from "../utils";
 
 // Schema for yup
 const validationSchema = Yup.object().shape({
@@ -26,7 +27,7 @@ const INITIAL_VALUES = {
   updated: null,
 };
 
-export default function NewIssue() {
+export default ({issue = null, onSubmit = noop}) => {
 
   const renderInputControl = (propName, placeholder, label, handleChange, handleBlur, values, touched, errors) =>
     <Form.Group controlId={propName}>
@@ -74,7 +75,6 @@ export default function NewIssue() {
         name={propName}
         placeholder={'Resolved'}
         onChange={(event) => {
-          debugger
           setFieldValue(propName, event.target.value)
         }}
         onBlur={onBlur}
@@ -93,7 +93,6 @@ export default function NewIssue() {
       <Form.Label>Issue Severity</Form.Label>
       <div>
         <ToggleButtonGroup type="checkbox" onChange={e => {
-          debugger
           setFieldValue(propName, e[1])
         }} value={values[propName]} className="mb-2">
           <ToggleButton value={ISSUE_SEVERITY.MAJOR}>Major</ToggleButton>
@@ -113,7 +112,6 @@ export default function NewIssue() {
       <Form.Label>Issue Status</Form.Label>
       <div>
         <ToggleButtonGroup type="checkbox" onChange={e => {
-          debugger
           setFieldValue(propName, e[1])
         }} value={values[propName]} className="mb-2">
           <ToggleButton value={ISSUE_STATUS.OPEN}>Open</ToggleButton>
@@ -128,13 +126,7 @@ export default function NewIssue() {
   };
 
   let registerNewIssue = (values, {setSubmitting, resetForm}) => {
-    setSubmitting(true);
-    let {firstName, lastName, email, phone, password, location} = values
-    APIs.createIssue(firstName, lastName, email, password, location, phone).then(x => {
-      // alert(JSON.stringify(values, null, 2));
-      resetForm();
-      setSubmitting(false);
-    });
+    onSubmit(issue, values, {setSubmitting, resetForm})
   };
 
   let renderNewIssueForm = (obj) => {
@@ -157,13 +149,13 @@ export default function NewIssue() {
       {renderInputControl('description', 'Description', 'Issue Description', handleChange, handleBlur, values, touched, errors)}
       <button type="submit" disabled={isSubmitting}
               className="btn btn-dark btn-lg btn-block">
-        Create
+        {issue ? 'Update Issue' : 'Register Issue'}
       </button>
     </Form>;
   };
 
   return (
-    <Formik initialValues={INITIAL_VALUES} validationSchema={validationSchema}
+    <Formik initialValues={issue || INITIAL_VALUES} validationSchema={validationSchema}
             onSubmit={registerNewIssue}>
       {renderNewIssueForm}
     </Formik>

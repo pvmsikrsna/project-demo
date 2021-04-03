@@ -14,16 +14,16 @@ export const APIs = {
     await axios.post(API_HOST + '/users', payload)
     return API_CALL_RESULTS.SUCCESS
   },
-  createIssue: async (description, status, severity, createdBy) => {
+  createIssue: async (description, status, severity, created, resolved, createdBy) => {
     let payload = {
-      description, status, severity, createdBy
+      description, status, severity, created, resolved, createdBy
     }
     await axios.post(API_HOST + '/issues', payload)
     return API_CALL_RESULTS.SUCCESS
   },
   updateIssue: async (payload) => {
     let {id, ...rest} = payload
-    await axios.put(API_HOST + '/issue/' + id, rest)
+    await axios.put(`${API_HOST}/issues/${id}`, rest)
     return API_CALL_RESULTS.SUCCESS
   },
   getIssues: async (params) => {

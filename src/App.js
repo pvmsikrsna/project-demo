@@ -50,6 +50,64 @@ const App = (props, context) => {
     return <TopIssues/>
   };
 
+  // When search filter changes, filter the issues
+  let fetchIssuesList = () => {
+    return APIs.getIssues({description_like: issueFilter.trim()})
+  }
+
+  let fetchAndUpdateIssueList = () => {
+    fetchIssuesList().then(({data: list}) => {
+      setIssueList(list)
+    })
+  }
+
+
+  let registerNewIssue = (issue, values, {setSubmitting, resetForm}) => {
+    // issue is null, since it's a new issue
+    setSubmitting(true);
+    let {description, status, severity, created, updated, createdBy} = values
+    APIs.createIssue(description, status, severity, created, updated, createdBy).then(x => {
+      // alert(JSON.stringify(values, null, 2));
+      fetchIssuesList().then(({data: list}) => {
+        resetForm();
+        setSubmitting(false);
+        setIssueList(list)
+        history.push(`/issue/${issue.id}`)
+      })
+    });
+  };
+
+
+  let updateIssue = (issue, values, {setSubmitting, resetForm}) => {
+    setSubmitting(true);
+    let {description, status, severity, created, resolved, } = values
+    let payload = Object.assign({}, issue, {description, status, severity, created, resolved},)
+    debugger
+    APIs.updateIssue(payload).then(x => {
+      // alert(JSON.stringify(values, null, 2));
+      fetchIssuesList().then(({data: list}) => {
+        resetForm();
+        setIssueList(list)
+        history.push(`/issue/${issue.id}`)
+      })
+    });
+  };
+
+  // Create New Issue Handler
+  const renderNewIssueRoute = () => {
+    return <NewIssue onSubmit={registerNewIssue}/>
+  };
+
+  // Edit Issue Handler
+  const renderEditIssueRoute = () => {
+    let {path, url, params} = issueIdMatch;
+    let matched = issueList.filter(x => x.id == params.id)
+    if (matched.length === 1) {
+      return <NewIssue issue={matched[0]} onSubmit={updateIssue}/>
+    }
+    return <></>
+  };
+
   let issueIdMatch = useRouteMatch({
     path: "/issue/:id", strict: true,
     sensitive: true
@@ -61,9 +119,8 @@ const App = (props, context) => {
     let matched = issueList.filter(x => x.id == params.id)
     if (matched.length === 1) {
       return <ViewIssue issue={matched[0]}/>
-    } else {
     }
-    return <h1> Failed for {JSON.stringify(params)}</h1>
+    return <></>
   };
 
   // Render the routes
@@ -71,10 +128,11 @@ const App = (props, context) => {
     console.log({loginState})
     if (loginState === APP_STATE.LOGIN_SUCCESS) {
       return <>
-        <Route exact path='/issue/new' component={NewIssue}/>
+        <Route exact path='/issue/new' component={renderNewIssueRoute}/>
         <Route exact path='/issues' render={renderIssuesRoute}/>
         <Route exact path='/issues/top' render={renderTopIssuesRoute}/>
-        <Route path='/issue/:id' render={renderIssueDetails}/>
+        <Route exact path='/issue/:id' render={renderIssueDetails}/>
+        <Route exact path='/issue/:id/edit' render={renderEditIssueRoute}/>
         <Route exact path='/:any' render={() => <Redirect to={'/issues'}/>}/>
       </>;
     } else if (loginState === APP_STATE.LOGOUT) {
@@ -102,12 +160,8 @@ const App = (props, context) => {
     setIssueFilter(event.target.value);
   }, [])
 
-  // When search filter changes, filter the issues
-  React.useEffect(() => {
-    APIs.getIssues({description_like: issueFilter.trim()}).then(({data: list}) => {
-      setIssueList(list)
-    })
-  }, [issueFilter])
+
+  React.useEffect(fetchAndUpdateIssueList, [issueFilter])
 
   React.useEffect(() => {
 
