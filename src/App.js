@@ -12,6 +12,7 @@ import NewIssue from "./components/NewIssue";
 import {APIs} from "./apis";
 import ViewIssue from "./components/ViewIssue";
 import {useTopIssues} from "./hooks/useTopIssues";
+import TopIssues from "./components/TopIssues";
 
 
 const Redirect = withRouter(({to, history}) => {
@@ -43,6 +44,11 @@ const App = (props, context) => {
   const renderIssuesRoute = () => {
     return <Issues list={issueList} onViewIssue={loadIssue} onEditIssue={editIssue}/>
   };
+  
+  // List Issue Handler
+  const renderTopIssuesRoute = () => {
+    return <TopIssues/>
+  };
 
   let issueIdMatch = useRouteMatch({
     path: "/issue/:id", strict: true,
@@ -67,6 +73,7 @@ const App = (props, context) => {
       return <>
         <Route exact path='/issue/new' component={NewIssue}/>
         <Route exact path='/issues' render={renderIssuesRoute}/>
+        <Route exact path='/issues/top' render={renderTopIssuesRoute}/>
         <Route path='/issue/:id' render={renderIssueDetails}/>
         <Route exact path='/:any' render={() => <Redirect to={'/issues'}/>}/>
       </>;
@@ -85,7 +92,6 @@ const App = (props, context) => {
       </>
     } else {
       return <>
-        <h1>Checking user</h1>
       </>
     }
   };
