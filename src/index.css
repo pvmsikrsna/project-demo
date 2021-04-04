@@ -107,7 +107,7 @@ h1 {
     font-size: .8em;
 }
 
-.issue.card{
+.issue.card {
     width: 100%;
     height: 180px;
     margin-bottom: 15px;
@@ -131,6 +131,24 @@ h1 {
 }
 
 button.register-issue {
-    margin-top:34px;
+    margin-top: 34px;
     display: block;
+}
+
+.username {
+    margin: 0 10px;
+}
+
+.login.error-message {
+    text-align: left;
+    height: auto;
+    padding: 0;
+}
+
+.login-error-wrapper {
+    height: 30px;
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 10px;
+    align-items: center;
 }

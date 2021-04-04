@@ -18,6 +18,11 @@ const validationSchema = Yup.object().shape({
     .max(100, "*Last Name can't be longer than 100 characters")
     .required("*Last Name is required"),
 
+  password: Yup.string()
+    .min(5, "*Password must have at least 5 characters")
+    .max(10, "*Password can't be longer than 10 characters")
+    .required("*Password is required"),
+
   email: Yup.string()
     .email("*Must be a valid email address")
     .max(100, "*Email must be less than 100 characters")
@@ -26,23 +31,28 @@ const validationSchema = Yup.object().shape({
   phone: Yup.string()
     .matches(phoneRegExp, "*Phone number is not valid")
     .required("*Phone number required"),
+  
+  location: Yup.string()
+    .min(2, "*Location must have at least 2 characters")
+    .max(100, "*Location can't be longer than 100 characters")
+    .required("*Location required"),
 });
 const INITIAL_VALUES = {
-  // firstName: "",
-  // lastName: "",
-  // email: "",
-  // phone: "",
-  // password: "",
-  // location: "",
+  firstName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  password: "",
+  location: "",
 
-  firstName: "Ravi",
-  lastName: "Krishna",
-  email: "ravi@email.com",
-  phone: "12311231",
-  password: "12341234",
-  location: "Hyderabad",
+  // firstName: "Ravi",
+  // lastName: "Krishna",
+  // email: "ravi@email.com",
+  // phone: "12311231",
+  // password: "12341234",
+  // location: "Hyderabad",
 };
-export default function Signup() {
+export default function Signup({onSignup}) {
 
   function renderInputControl(propName, placeholder, label, handleChange, handleBlur, values, touched, errors) {
     return <Form.Group controlId={propName}>
@@ -65,11 +75,11 @@ export default function Signup() {
   let registerUser = (values, {setSubmitting, resetForm}) => {
     setSubmitting(true);
     let {firstName, lastName, email, phone, password, location} = values
-    debugger
     APIs.createUser(firstName, lastName, email, password, location, phone).then(x => {
       // alert(JSON.stringify(values, null, 2));
       resetForm();
       setSubmitting(false);
+      onSignup(x)
     });
   };
 

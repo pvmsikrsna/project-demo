@@ -4,10 +4,19 @@
       "firstName": "Ravi",
       "lastName": "Krishna",
       "email": "ravi@email.com",
-      "password": "12341234",
+      "password": "dwihi",
       "location": "Hyderabad",
       "contactNo": "12311231",
       "id": 1
+    },
+    {
+      "firstName": "Vamshi",
+      "lastName": "Krishna",
+      "email": "vamshi@gmail.com",
+      "password": "nehal",
+      "location": "Hyderabad",
+      "contactNo": "12311231",
+      "id": 2
     }
   ],
   "issues": [
@@ -44,7 +53,7 @@
     }
   ],
   "top-issues": {
-    "2": 3,
+    "2": 4,
     "3": 5,
     "4": 7
   }

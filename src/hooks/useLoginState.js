@@ -15,7 +15,7 @@ export const useLoginState = () => {
     let user = localStorage.getItem('user')
     APIs.findUserByEmail(user).then(({data: users}) => {
       if (users.length > 0) {
-        setValue(Object.assign({}, value, {loginState: LOGIN_STATE.LOGIN_SUCCESS, user}))
+        setValue(Object.assign({}, value, {loginState: LOGIN_STATE.LOGIN_SUCCESS, user: users[0]}))
         setLoginState(LOGIN_STATE.LOGIN_SUCCESS)
       } else {
         setValue(Object.assign({}, value, {loginState: LOGIN_STATE.LOGOUT, user: null}))
@@ -26,8 +26,8 @@ export const useLoginState = () => {
   const setLoginUser = React.useCallback((user) => {
     localStorage.setItem('user', user.email)
     setLoginState(LOGIN_STATE.LOGIN_SUCCESS);
-    setValue(Object.assign({}, value, {loginState: LOGIN_STATE.LOGIN_SUCCESS, user: user.email}))
-  })
+    setValue(Object.assign({}, value, {loginState: LOGIN_STATE.LOGIN_SUCCESS, user: user}))
+  },[])
 
   const clearLogin = React.useCallback((user) => {
     localStorage.removeItem('user')

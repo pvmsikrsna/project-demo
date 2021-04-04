@@ -17,7 +17,7 @@ import TopIssues from "./components/TopIssues";
 
 const Redirect = withRouter(({to, history, exclude}) => {
     React.useEffect(() => {
-      if(exclude !== history.location.pathname){
+      if(!exclude || exclude.indexOf(history.location.pathname) === -1){
         history.replace(to)
       }
     }, [])
@@ -52,10 +52,17 @@ const App = (props, context) => {
   }, [])
 
   // List Issue Handler
+  const renderSignup = () => {
+    return <Signup onSignup={e => {
+      history.push('/sign-up')
+    }}/>
+  };
+
+  // List Issue Handler
   const renderIssuesRoute = () => {
     return <Issues list={issueList} onViewIssue={loadIssue} onEditIssue={editIssue}/>
   };
-  
+
   // List Issue Handler
   const renderTopIssuesRoute = () => {
     return <TopIssues issues={issueList}/>
@@ -159,9 +166,9 @@ const App = (props, context) => {
             history.replace('/issues');
           }}/>
         }}/>
-        <Route exact path='/sign-up' component={Signup}/>
+        <Route exact path='/sign-up' render={renderSignup}/>
         <Route path='/' render={() => {
-          return <Redirect to='/sign-in' exclude='/issues'/>
+          return <Redirect to='/sign-in' exclude={['/issues', '/sign-up']}/>
         }}/>
       </>
     } else {
@@ -184,7 +191,9 @@ const App = (props, context) => {
   }, [issueIdMatch])
 
   return <div className="App">
-    <NavBar2 search={issueFilter} onLogout={clearLogin} onAddNewIssue={goToCreateNewIssue}
+    <NavBar2 search={issueFilter}
+             user={user}
+             onLogout={clearLogin} onAddNewIssue={goToCreateNewIssue}
              onSearchChange={handleFilterChange} loginState={loginState}/>
 
     <div className="outer">

@@ -16,19 +16,19 @@ const validationSchema = Yup.object().shape({
 });
 
 const INITIAL_VALUES = {
-  // firstName: "",
-  // lastName: "",
-  // email: "",
-  // phone: "",
-  // password: "",
-  // location: "",
+  firstName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  password: "",
+  location: "",
 
-  firstName: "Ravi",
-  lastName: "Krishna",
-  email: "ravi@email.com",
-  phone: "12311231",
-  password: "12341234",
-  location: "Hyderabad",
+  // firstName: "Ravi",
+  // lastName: "Krishna",
+  // email: "ravi@email.com",
+  // phone: "12311231",
+  // password: "12341234",
+  // location: "Hyderabad",
 };
 
 function Login(props, context) {
@@ -49,6 +49,7 @@ function Login(props, context) {
         <div className="error-message">{errors[propName]}</div>
       ) : null}
     </Form.Group>;
+
 
   let [errorMessage, setErrorMessage] = React.useState('');
 
@@ -78,7 +79,9 @@ function Login(props, context) {
   };
 
   let renderError = () => {
-    
+    return <div className={'login-error-wrapper'}>
+        <span className={'login error-message'}>{errorMessage}</span>
+    </div>
   }
 
   return (
@@ -97,11 +100,11 @@ function Login(props, context) {
 
         {renderInputControl('email', 'Email', 'Email', handleChange, handleBlur, values, touched, errors)}
         {renderInputControl('password', 'Password', 'Password', handleChange, handleBlur, values, touched, errors)}
-
-        <button type="submit" className="btn btn-dark btn-lg btn-block"
+          {renderError()}
+      <button type="submit" className="btn btn-dark btn-lg btn-block"
                 disabled={isSubmitting}>Login
         </button>
-        {renderError()}
+
       </Form>)
       }
     </Formik>
