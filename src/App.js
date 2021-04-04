@@ -1,19 +1,19 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import {Route, Switch, useHistory, useRouteMatch, withRouter} from "react-router-dom";
 
-import Login from "./components/login.component";
-import Signup from "./components/signup.component";
-import Issues from "./components/Issues";
 import {LOGIN_STATE, useLoginState} from "./hooks/useLoginState";
-import NavBar2 from './components/NavBar'
-import NewIssue from "./components/NewIssue";
 import {APIs} from "./apis";
-import ViewIssue from "./components/ViewIssue";
 import {useTopIssues} from "./hooks/useTopIssues";
-import TopIssues from "./components/TopIssues";
+import NavBar2 from './components/NavBar'
 
+const NewIssue =  React.lazy(() => import("./components/NewIssue"));
+const Issues =  React.lazy(() => import("./components/Issues"));
+const Login =  React.lazy(() => import("./components/login.component"));
+const Signup =  React.lazy(() => import("./components/signup.component"));
+const ViewIssue =  React.lazy(() => import("./components/ViewIssue"));
+const TopIssues =  React.lazy(() => import("./components/TopIssues"));
 
 const Redirect = withRouter(({to, history, exclude}) => {
     React.useEffect(() => {
@@ -53,19 +53,24 @@ const App = (props, context) => {
 
   // List Issue Handler
   const renderSignup = () => {
-    return <Signup onSignup={e => {
-      history.push('/sign-up')
-    }}/>
+    return <Suspense fallback={<div>Loading...</div>}>
+      <Signup onSignup={e => {
+        history.push('/sign-up')
+      }}/>
+    </Suspense>
   };
 
   // List Issue Handler
   const renderIssuesRoute = () => {
-    return <Issues list={issueList} onViewIssue={loadIssue} onEditIssue={editIssue}/>
+    return <Suspense fallback={<div>Loading...</div>}><Issues list={issueList} onViewIssue={loadIssue} onEditIssue={editIssue}/>
+    </Suspense>
   };
 
   // List Issue Handler
   const renderTopIssuesRoute = () => {
-    return <TopIssues issues={issueList}/>
+    return <Suspense fallback={<div>Loading...</div>}>
+      <TopIssues issues={issueList}/>
+    </Suspense>
   };
 
   // When search filter changes, filter the issues
@@ -113,7 +118,9 @@ const App = (props, context) => {
 
   // Create New Issue Handler
   const renderNewIssueRoute = () => {
-    return <NewIssue onSubmit={registerNewIssue}/>
+    return <Suspense fallback={<div>Loading...</div>}>
+      <NewIssue onSubmit={registerNewIssue}/>
+    </Suspense>
   };
 
   // Edit Issue Handler
@@ -121,7 +128,10 @@ const App = (props, context) => {
     let {path, url, params} = issueIdMatch;
     let matched = issueList.filter(x => x.id == params.id)
     if (matched.length === 1) {
-      return <NewIssue issue={matched[0]} onSubmit={updateIssue}/>
+      return <Suspense fallback={<div>Loading...</div>}>
+        <NewIssue issue={matched[0]}
+                  onSubmit={updateIssue}/>
+      </Suspense>
     }
     return <></>
   };
@@ -136,7 +146,9 @@ const App = (props, context) => {
     let {path, url, params} = issueIdMatch;
     let matched = issueList.filter(x => x.id == params.id)
     if (matched.length === 1) {
-      return <ViewIssue issue={matched[0]}/>
+      return <Suspense fallback={<div>Loading...</div>}>
+        <ViewIssue issue={matched[0]}/>
+      </Suspense>
     }
     return <></>
   };
@@ -161,10 +173,12 @@ const App = (props, context) => {
       return <>
         <Route exact path='/issues' render={renderIssuesRoute}/>
         <Route exact path='/sign-in' render={() => {
-          return <Login onLogin={user => {
+          return <Suspense fallback={<div>Loading...</div>}>
+            <Login onLogin={user => {
             setLoginUser(user)
             history.replace('/issues');
           }}/>
+          </Suspense>
         }}/>
         <Route exact path='/sign-up' render={renderSignup}/>
         <Route path='/' render={() => {
