@@ -4,6 +4,8 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {APIs} from "../apis";
 
+import toast from "react-hot-toast";
+
 // RegEx for phone number validation
 const phoneRegExp = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
 // Schema for yup
@@ -75,16 +77,32 @@ export default function Signup({onSignup}) {
   let registerUser = (values, {setSubmitting, resetForm}) => {
     setSubmitting(true);
     let {firstName, lastName, email, phone, password, location} = values
-    APIs.createUser(firstName, lastName, email, password, location, phone).then(x => {
-      // alert(JSON.stringify(values, null, 2));
-      resetForm();
+    APIs.findUserByEmail(email).then(({data: users}) => {
+      let user = users[0];
       setSubmitting(false);
-      onSignup(x)
+      if (!user) {
+        APIs.createUser(firstName, lastName, email, password, location, phone).then(x => {
+          // alert(JSON.stringify(values, null, 2));
+          toast.success('Account created successfully')
+          resetForm();
+          onSignup(x)
+        });
+      } else {
+        setErrorMessage('Email already registered')
+      }
     });
   };
 
+  let [errorMessage, setErrorMessage] = React.useState('');
+
+  let renderError = () => {
+    return <div className={'login-error-wrapper'}>
+      <span className={'login error-message'}>{errorMessage}</span>
+    </div>
+  }
+
   return (
-    <Formik initialValues={INITIAL_VALUES} validationSchema={validationSchema}
+    <><Formik initialValues={INITIAL_VALUES} validationSchema={validationSchema}
             onSubmit={registerUser}>
       {({
           values,
@@ -101,8 +119,8 @@ export default function Signup({onSignup}) {
         {renderInputControl('email', 'Email', 'Email', handleChange, handleBlur, values, touched, errors)}
         {renderInputControl('password', 'Password', 'Password', handleChange, handleBlur, values, touched, errors)}
         {renderInputControl('location', 'Enter Location', 'Location', handleChange, handleBlur, values, touched, errors)}
-        {renderInputControl('contact', 'Enter contact no', 'Contact No', handleChange, handleBlur, values, touched, errors)}
-
+        {renderInputControl('phone', 'Enter contact no', 'Contact No', handleChange, handleBlur, values, touched, errors)}
+        {renderError()}
         <button type="submit" className="btn btn-dark btn-lg btn-block"
                 disabled={isSubmitting}>Register
         </button>
@@ -111,5 +129,6 @@ export default function Signup({onSignup}) {
         </p></Form>)
       }
     </Formik>
+    </>
   );
 }

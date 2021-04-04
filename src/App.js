@@ -7,6 +7,7 @@ import {LOGIN_STATE, useLoginState} from "./hooks/useLoginState";
 import {APIs} from "./apis";
 import {useTopIssues} from "./hooks/useTopIssues";
 import NavBar2 from './components/NavBar'
+import {toast, Toaster} from "react-hot-toast";
 
 const NewIssue =  React.lazy(() => import("./components/NewIssue"));
 const Issues =  React.lazy(() => import("./components/Issues"));
@@ -55,7 +56,7 @@ const App = (props, context) => {
   const renderSignup = () => {
     return <Suspense fallback={<div>Loading...</div>}>
       <Signup onSignup={e => {
-        history.push('/sign-up')
+        history.push('/sign-in')
       }}/>
     </Suspense>
   };
@@ -90,12 +91,14 @@ const App = (props, context) => {
     setSubmitting(true);
     let {description, status, severity, created, updated, createdBy} = values
     APIs.createIssue(description, status, severity, created, updated, createdBy).then(x => {
+      toast.success(`Issue - ${issue.id} registered`)
       // alert(JSON.stringify(values, null, 2));
       fetchIssuesList().then(({data: list}) => {
         resetForm();
         setSubmitting(false);
         setIssueList(list)
         history.push(`/issues`)
+
       })
     });
   };
@@ -113,6 +116,7 @@ const App = (props, context) => {
         setIssueList(list)
         history.push(`/issue/${issue.id}`)
       })
+      toast.success(`Issue - ${issue.id} updated`)
     });
   };
 
@@ -217,6 +221,7 @@ const App = (props, context) => {
         </Switch>
       </div>
     </div>
+    <Toaster />
   </div>
 };
 

@@ -5,6 +5,8 @@ import * as Yup from 'yup';
 import {APIs} from "../apis";
 import {withRouter} from "react-router";
 
+import toast from "react-hot-toast";
+
 // Schema for yup
 const validationSchema = Yup.object().shape({
 
@@ -71,6 +73,7 @@ function Login(props, context) {
         return;
       } else {
         localStorage.setItem('user', user.email);
+        toast.success('Login Success')
         if(props.onLogin){
           props.onLogin(user);
         }
@@ -100,7 +103,7 @@ function Login(props, context) {
 
         {renderInputControl('email', 'Email', 'Email', handleChange, handleBlur, values, touched, errors)}
         {renderInputControl('password', 'Password', 'Password', handleChange, handleBlur, values, touched, errors)}
-          {renderError()}
+        {renderError()}
       <button type="submit" className="btn btn-dark btn-lg btn-block"
                 disabled={isSubmitting}>Login
         </button>

@@ -17,6 +17,15 @@
       "location": "Hyderabad",
       "contactNo": "12311231",
       "id": 2
+    },
+    {
+      "firstName": "Ravi",
+      "lastName": "Krishna",
+      "email": "ravi@email2.com",
+      "password": "12341234",
+      "location": "Hyderabad",
+      "contactNo": "12311231",
+      "id": 3
     }
   ],
   "issues": [
@@ -45,7 +54,7 @@
       "id": 3
     },
     {
-      "description": "asdfasdf",
+      "description": "Testing the toasts",
       "status": "Open",
       "severity": "Major",
       "created": "1889-12-12",
